@@ -1,6 +1,8 @@
 using Elasticsearch.Net;
 using Nest;
 using NestLibrary.Extentions;
+using NestLibrary.Repositories;
+using NestLibrary.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddElasticSearch(builder.Configuration);
-
-
+builder.Services.AddScoped<ProductRepository>();
+builder.Services.AddScoped<ProductService>();
 
 var app = builder.Build();
 

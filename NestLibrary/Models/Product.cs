@@ -1,4 +1,5 @@
 ﻿using Nest;
+using NestLibrary.Dtos;
 
 namespace NestLibrary.Models
 {
@@ -12,5 +13,15 @@ namespace NestLibrary.Models
         public DateTime CreatedDate { get; set; }
         public DateTime? UpdatedDate { get; set; }
         public ProductFeature? Feature { get; set; }
+
+
+
+        public ProductResponseDto ToProductResponseDto()
+        {
+            return new(Id, Name, Price, Stock, CreatedDate, UpdatedDate, Feature == null ? null : new(Feature.Width, Feature.Height, Feature.Color));
+        }
+
+
+
     }
 }
