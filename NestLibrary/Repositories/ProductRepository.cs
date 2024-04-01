@@ -1,4 +1,4 @@
-﻿using Nest;
+﻿using Elastic.Clients.Elasticsearch;
 using NestLibrary.Dtos;
 using NestLibrary.Exceptions;
 using NestLibrary.Models;
@@ -9,10 +9,10 @@ namespace NestLibrary.Repositories
     public class ProductRepository
     {
 
-        private readonly ElasticClient _client;
+        private readonly ElasticsearchClient _client;
         private const string _indexName = "products";
 
-        public ProductRepository(ElasticClient client)
+        public ProductRepository(ElasticsearchClient client)
         {
             _client = client;
         }
@@ -22,7 +22,8 @@ namespace NestLibrary.Repositories
             product.SetCreatedDate();
 
             var response = await _client.IndexAsync(product,x => x.Index(_indexName).Id(Guid.NewGuid().ToString()));
-            if (!response.IsValid) throw new AppException("The product couldn't be saved!",HttpStatusCode.InternalServerError);
+            if (!response.IsSuccess())
+                throw new AppException("The product couldn't be saved!",HttpStatusCode.InternalServerError);
             product.Id = response.Id;
             return product;
         }
@@ -31,7 +32,7 @@ namespace NestLibrary.Repositories
         {
             var result = await _client.SearchAsync<Product>(x => x.Index(_indexName).Query(x => x.MatchAll()));
             
-            if(!result.IsValid) throw new AppException("error",HttpStatusCode.InternalServerError);
+            if(!result.IsSuccess()) throw new AppException("error",HttpStatusCode.InternalServerError);
 
             return result
                 .Hits
@@ -43,24 +44,21 @@ namespace NestLibrary.Repositories
         {
             var result = await _client.GetAsync<Product>(id, x => x.Index(_indexName));
             
-            if (!result.IsValid) throw new AppException("error", (HttpStatusCode)result.ApiCall.HttpStatusCode!);
+            if (!result.Found) throw new AppException("error", (HttpStatusCode)result.ApiCallDetails.HttpStatusCode!);
 
-            result.Source.Id = result.Id;
+            result.Source!.Id = result.Id;
             return result.Source;
         }
 
         public async Task UpdateAsync(ProductUpdateDto product)
         {
-            var response = await _client.UpdateAsync<Product, ProductUpdateDto>(product.Id, x => x.Index(_indexName).Doc(product));
-            if (!response.IsValid)
+            var response = await _client.UpdateAsync<Product, ProductUpdateDto>(_indexName,product.Id, x => x.Doc(product));
+            if (!response.IsSuccess())
             {
                 if (response.Result == Result.NotFound)
                     throw new Exception("not found");
-
-
-
-                if(response.Result == Result.Error)
-                    throw new Exception(response.ServerError.Error.ToString());
+                
+                throw new Exception(response.ElasticsearchServerError?.Error.ToString());
             }
         }
 
@@ -68,7 +66,7 @@ namespace NestLibrary.Repositories
         public async Task DeleteAsync(string id)
         {
             var response = await _client.DeleteAsync<Product>(id,x => x.Index(_indexName));
-            if (!response.IsValid && response.Result == Result.NotFound)
+            if (!response.IsSuccess() && response.Result == Result.NotFound)
                 throw new Exception("not found");
         }
 
