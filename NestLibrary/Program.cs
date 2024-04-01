@@ -10,6 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddElasticSearch(builder.Configuration);
 builder.Services.AddScoped<ProductRepository>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<ECommerceRespository>();
 
 var app = builder.Build();
 
