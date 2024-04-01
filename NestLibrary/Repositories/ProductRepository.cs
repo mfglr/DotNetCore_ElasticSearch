@@ -52,9 +52,25 @@ namespace NestLibrary.Repositories
         public async Task UpdateAsync(ProductUpdateDto product)
         {
             var response = await _client.UpdateAsync<Product, ProductUpdateDto>(product.Id, x => x.Index(_indexName).Doc(product));
-            if (!response.IsValid) throw new Exception("error");
+            if (!response.IsValid)
+            {
+                if (response.Result == Result.NotFound)
+                    throw new Exception("not found");
+
+
+
+                if(response.Result == Result.Error)
+                    throw new Exception(response.ServerError.Error.ToString());
+            }
         }
 
+
+        public async Task DeleteAsync(string id)
+        {
+            var response = await _client.DeleteAsync<Product>(id,x => x.Index(_indexName));
+            if (!response.IsValid && response.Result == Result.NotFound)
+                throw new Exception("not found");
+        }
 
     }
 }

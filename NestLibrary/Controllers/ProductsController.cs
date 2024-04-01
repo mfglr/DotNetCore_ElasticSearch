@@ -41,5 +41,12 @@ namespace NestLibrary.Controllers
             await _productService.UpdateAsync(request);
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            await _productService.DeleteAsync(id);
+            return NoContent();
+        }
     }
 }

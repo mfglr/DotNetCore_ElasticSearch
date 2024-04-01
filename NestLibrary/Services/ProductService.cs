@@ -32,5 +32,10 @@ namespace NestLibrary.Services
             await _productRepository.UpdateAsync(product);
         }
 
+        public async Task DeleteAsync(string id)
+        {
+            await _productRepository.DeleteAsync(id);
+        }
+
     }
 }
