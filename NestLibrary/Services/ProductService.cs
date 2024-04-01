@@ -1,4 +1,5 @@
 ﻿using NestLibrary.Dtos;
+using NestLibrary.Models;
 using NestLibrary.Repositories;
 
 namespace NestLibrary.Services
@@ -22,7 +23,10 @@ namespace NestLibrary.Services
             var response = await _productRepository.GetAllAsync();
             return response.Select(x => x.ToProductResponseDto()).ToList();
         } 
-
+        public async Task<ProductResponseDto> GetById(string id)
+        {
+            return (await _productRepository.GetById(id)).ToProductResponseDto();
+        }
 
     }
 }

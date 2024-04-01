@@ -23,11 +23,16 @@ namespace NestLibrary.Controllers
             return Ok(await _productService.SaveAsync(request));
         }
 
-
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _productService.GetAllAsync());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(string id)
+        {
+            return Ok(await _productService.GetById(id));
         }
     }
 }

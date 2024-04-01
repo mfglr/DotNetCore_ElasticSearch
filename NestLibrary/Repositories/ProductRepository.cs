@@ -28,15 +28,26 @@ namespace NestLibrary.Repositories
 
         public async Task<IReadOnlyCollection<Product>> GetAllAsync()
         {
-            return (
-                    await _client.SearchAsync<Product>(
-                        x => x.Index(_indexName).Query(x => x.MatchAll())
-                        )
-                )
+            var result = await _client.SearchAsync<Product>(x => x.Index(_indexName).Query(x => x.MatchAll()));
+            
+            if(!result.IsValid) throw new AppException("error",HttpStatusCode.InternalServerError);
+
+            return result
                 .Hits
                 .Select(x => { x.Source.Id = x.Id; return x.Source;})
                 .ToList();
         }
+
+        public async Task<Product> GetById(string id)
+        {
+            var result = await _client.GetAsync<Product>(id, x => x.Index(_indexName));
+            
+            if (!result.IsValid) throw new AppException("error", (HttpStatusCode)result.ApiCall.HttpStatusCode!);
+
+            result.Source.Id = result.Id;
+            return result.Source;
+        }
+
 
     }
 }
