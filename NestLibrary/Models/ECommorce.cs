@@ -22,6 +22,9 @@ namespace NestLibrary.Models.ECommerceModel
         [JsonPropertyName("order_id")]
         public int OrderId { get; set; }
 
+        [JsonPropertyName("taxful_total_price")]
+        public double TaxfulTotalPrice { get; set; }
+
         [JsonPropertyName("order_date")]
         public DateTime OrderDate { get; set; }
 

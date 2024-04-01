@@ -34,5 +34,13 @@ namespace NestLibrary.Controllers
         }
 
 
+
+        [HttpGet("{from}/{to}")]
+        public async Task<IActionResult> RangeQuery(double from, double to)
+        {
+            return Ok(await _repository.RangeQueryAsync(from,to));
+        }
+
+
     }
 }
