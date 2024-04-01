@@ -27,6 +27,10 @@ namespace NestLibrary.Services
         {
             return (await _productRepository.GetById(id)).ToProductResponseDto();
         }
+        public async Task UpdateAsync(ProductUpdateDto product)
+        {
+            await _productRepository.UpdateAsync(product);
+        }
 
     }
 }

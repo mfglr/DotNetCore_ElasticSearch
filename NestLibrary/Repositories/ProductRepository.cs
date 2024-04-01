@@ -1,4 +1,5 @@
 ﻿using Nest;
+using NestLibrary.Dtos;
 using NestLibrary.Exceptions;
 using NestLibrary.Models;
 using System.Net;
@@ -46,6 +47,12 @@ namespace NestLibrary.Repositories
 
             result.Source.Id = result.Id;
             return result.Source;
+        }
+
+        public async Task UpdateAsync(ProductUpdateDto product)
+        {
+            var response = await _client.UpdateAsync<Product, ProductUpdateDto>(product.Id, x => x.Index(_indexName).Doc(product));
+            if (!response.IsValid) throw new Exception("error");
         }
 
 

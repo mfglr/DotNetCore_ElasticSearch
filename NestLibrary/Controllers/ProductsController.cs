@@ -34,5 +34,12 @@ namespace NestLibrary.Controllers
         {
             return Ok(await _productService.GetById(id));
         }
+
+        [HttpPut]
+        public async Task<IActionResult> Update(ProductUpdateDto request)
+        {
+            await _productService.UpdateAsync(request);
+            return NoContent();
+        }
     }
 }
