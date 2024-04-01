@@ -21,5 +21,12 @@ namespace NestLibrary.Controllers
             return Ok(await _repository.TermQuery(firstName,page));
         }
 
+        [HttpPost("{page=0}")]
+        public async Task<IActionResult> GetByNames(List<string> names, int page)
+        {
+            return Ok(await _repository.GetByNames(names, page));
+        }
+
+
     }
 }
