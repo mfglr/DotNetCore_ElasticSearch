@@ -19,10 +19,18 @@ namespace NestLibrary.Repositories
 
         public async Task<ImmutableList<ECommorce>> TermQuery(string firstName,int page)
         {
+            //var result = await _client.SearchAsync<ECommorce>(
+            //    x => x
+            //        .Index(indexName)
+            //        .Query(x => x.Term(x => x.Field("customer_first_name.keyword").Value(firstName)))
+            //        .From(page * numberOfRecordPerPage)
+            //        .Size(numberOfRecordPerPage)
+            //    );
+
             var result = await _client.SearchAsync<ECommorce>(
                 x => x
                     .Index(indexName)
-                    .Query(x => x.Term(x => x.Field("customer_first_name.keyword").Value(firstName)))
+                    .Query(x => x.Term(x => x.CustomerFirstName.Suffix("keyword"), firstName))
                     .From(page * numberOfRecordPerPage)
                     .Size(numberOfRecordPerPage)
                 );

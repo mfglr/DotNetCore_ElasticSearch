@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using NestLibrary.Repositories;
 
 namespace NestLibrary.Controllers
@@ -16,7 +15,7 @@ namespace NestLibrary.Controllers
         }
 
 
-        [HttpGet("{firstName}/{page}")]
+        [HttpGet("{firstName}/{page=0}")]
         public async Task<IActionResult> TermQuery(string firstName,int page)
         {
             return Ok(await _repository.TermQuery(firstName,page));
