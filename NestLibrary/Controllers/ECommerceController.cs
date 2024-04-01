@@ -27,6 +27,12 @@ namespace NestLibrary.Controllers
             return Ok(await _repository.GetByNames(names, page));
         }
 
+        [HttpGet("{name}/{page = 0}")]
+        public async  Task<IActionResult> Prefix(string name,int page)
+        {
+            return Ok(await _repository.Prefix(name,page));
+        }
+
 
     }
 }

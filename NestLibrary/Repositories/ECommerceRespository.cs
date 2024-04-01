@@ -81,5 +81,18 @@ namespace NestLibrary.Repositories
 
         }
 
+        public async Task<ImmutableList<ECommorce>> Prefix(string text,int page)
+        {
+            var result = await _client
+                .SearchAsync<ECommorce>(
+                    x => x.Index(indexName).Query(x => x.Prefix(x => x.Field(f => f.CustomerFirstName.Suffix("keyword")).Value(text)))
+                );
+
+            if (!result.IsSuccess())
+                throw new Exception("error");
+            return result.Hits.Select(x => { x.Source!.Id = x.Id; return x.Source; }).ToImmutableList();
+        }
+
+
     }
 }
