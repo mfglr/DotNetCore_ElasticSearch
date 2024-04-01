@@ -33,13 +33,18 @@ namespace NestLibrary.Controllers
             return Ok(await _repository.Prefix(name,page));
         }
 
-
-
         [HttpGet("{from}/{to}")]
         public async Task<IActionResult> RangeQuery(double from, double to)
         {
             return Ok(await _repository.RangeQueryAsync(from,to));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MatchAll()
+        {
+            return Ok(await _repository.MatchAll());
+        }
+
 
 
     }

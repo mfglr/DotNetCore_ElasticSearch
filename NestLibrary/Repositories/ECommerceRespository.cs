@@ -106,7 +106,14 @@ namespace NestLibrary.Repositories
             return result.Hits.Select(x => { x.Source!.Id = x.Id; return x.Source; }).ToImmutableList();
         }
 
+        public async Task<ImmutableList<ECommorce>> MatchAll()
+        {
+            var result = await _client.SearchAsync<ECommorce>(x => x.Query(x => x.MatchAll()));
 
+            if (!result.IsSuccess())
+                throw new Exception("error");
+            return result.Hits.Select(x => { x.Source!.Id = x.Id; return x.Source; }).ToImmutableList();
+        }
 
     }
 }
