@@ -15,9 +15,13 @@ namespace NestLibrary.Services
 
         public async Task<ProductResponseDto?> SaveAsync(ProductCreateDto request)
         {
-            var response = await _productRepository.SaveAsync(request.ToProduct());
-            return response?.ToProductResponseDto();
+            return (await _productRepository.SaveAsync(request.ToProduct()))?.ToProductResponseDto();
         }
+        public async Task<IReadOnlyCollection<ProductResponseDto>> GetAllAsync()
+        {
+            var response = await _productRepository.GetAllAsync();
+            return response.Select(x => x.ToProductResponseDto()).ToList();
+        } 
 
 
     }

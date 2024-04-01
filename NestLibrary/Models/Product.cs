@@ -15,6 +15,8 @@ namespace NestLibrary.Models
         public ProductFeature? Feature { get; set; }
 
 
+        public void SetCreatedDate() => CreatedDate = DateTime.Now;
+        public void SetUpdatedDate() => UpdatedDate = DateTime.Now;
 
         public ProductResponseDto ToProductResponseDto()
         {
